@@ -86,7 +86,7 @@
         .gallery-item img { width: 100%; height: 210px; object-fit: cover; display: block; background: #f1f5f9; }
         .gallery-item .info { padding: 14px; text-align: center; font-weight: 600; color: #334155; font-size: 14px; background: #fff; }
 
-        /* Müşteri Yorumları (Canlı) */
+        /* Müşteri Yorumları */
         .reviews-section { background: white; padding: 40px 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); margin-top: 45px; border: 1px solid #e2e8f0; }
         .review-form { background: #f8fafc; padding: 25px; border-radius: 12px; margin-bottom: 30px; border: 1px solid #e2e8f0; }
         .review-form input, .review-form textarea { width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; background: #fff; outline: none; transition: 0.2s; }
@@ -129,8 +129,8 @@
                 <p>Ankara'nın her noktasına ev, ofis, bina girişleri ve tüm yaşam alanlarınız için profesyonel seramik uygulamaları.</p>
                 
                 <div class="hero-buttons">
-                    <a href="tel:+905327022607" class="btn-call">📞 Hemen Ara</a>
-                    <a href="https://wa.me/905327022607?text=Merhaba%20Alaaddin%20Usta,%20Ankara'daki%20mekanımız%20için%20fayans%20bilgisi%20almak%20istiyordum." class="btn-whatsapp" target="_blank">📱 WhatsApp</a>
+                    <a href="tel:+905535583607" class="btn-call">📞 Hemen Ara</a>
+                    <a href="https://wa.me/905535583607?text=Merhaba%20Alaaddin%20Usta,%20Ankara'daki%20mekanımız%20için%20fayans%20bilgisi%20almak%20istiyordum." class="btn-whatsapp" target="_blank">📱 WhatsApp</a>
                     <a href="https://instagram.com/ankarasonmezfayans" class="btn-insta" target="_blank">📸 Instagram</a>
                     <a href="mailto:ankarasonmezfayans@gmail.com" class="btn-mail">✉️ E-Posta</a>
                 </div>
@@ -216,14 +216,13 @@
         <div class="cta-banner">
             <h3>Ücretsiz Keşif Fırsatı!</h3>
             <p>Ankara içi ev, iş yeri ve tüm mekân projelerinizde yerinde ölçü alıp net bütçe çıkarıyoruz. Sürpriz maliyetlerle karşılaşmayın.</p>
-            <a href="https://wa.me/905327022607?text=Merhaba%20Alaaddin%20Usta,%20Ankara'daki%20mekanımız%20için%20fayans%20bilgisi%20almak%20istiyordum." class="btn-whatsapp" style="padding: 12px 25px; font-size: 16px;" target="_blank">Keşif İçin Hemen Ulaşın</a>
+            <a href="https://wa.me/905535583607?text=Merhaba%20Alaaddin%20Usta,%20Ankara'daki%20mekanımız%20için%20fayans%20bilgisi%20almak%20istiyordum." class="btn-whatsapp" style="padding: 12px 25px; font-size: 16px;" target="_blank">Keşif İçin Hemen Ulaşın</a>
         </div>
 
         <!-- Fotoğraf Galerisi -->
         <h3 class="section-title">Yaptığımız Uygulamalar ve Referanslar</h3>
         <div class="gallery">
             <script>
-                // Eğer bilgisayarında fayans (1).jpg isimli bir resim varsa o da görünür, yoksa 0'dan 54'e kadar tüm resimler tıkır tıkır listelenir.
                 for (let i = 1; i <= 54; i++) {
                     document.write(`
                         <div class="gallery-item" onclick="bultenAc('fayans (${i}).jpg')">
@@ -235,19 +234,22 @@
             </script>
         </div>
 
-        <!-- Gerçek Müşteri Yorumları Alanı -->
+        <!-- Müşteri Yorumları -->
         <div class="reviews-section">
             <h3 class="section-title" style="margin-bottom: 20px;">Müşteri Yorumları</h3>
             
             <div class="review-form">
                 <h4 style="margin-bottom: 12px; color: #0f172a;">Siz de Değerlendirmenizi Yazın</h4>
+                <p style="font-size: 13px; color: #64748b; margin-bottom: 12px;">Yazdığınız yorumlar usta onayından geçtikten sonra sitede yayınlanır.</p>
                 <input type="text" id="yorumAd" placeholder="Adınız Soyadınız / Semt (Örn: Ahmet Y. - Keçiören)">
                 <textarea id="yorumMetin" rows="3" placeholder="Usta hakkındaki düşünceleriniz..."></textarea>
-                <button onclick="yorumEkle()">Yorumu Gönder ve Yayınla</button>
+                <button onclick="yorumEkle()">Yorumu Gönder (Onaya Gönder)</button>
             </div>
 
             <div class="reviews-list" id="yorumlarListesi">
-                <!-- Yorumlar buraya gelecek -->
+                <div class="review-card" style="text-align: center; color: #64748b; font-style: normal;">
+                    Onaylı yorumlar yükleniyor...
+                </div>
             </div>
         </div>
 
@@ -263,23 +265,35 @@
         <p>&copy; 2026 Sönmez Fayansçılık | Tüm Hakları Saklıdır. <span>Ankara Geneli Profesyonel Usta Hizmeti</span></p>
     </footer>
 
-    <script>
-        function bultenAc(src) {
+    <!-- Firebase ve Onay Mekanizması -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDKA_PmzbFQwnMDAqgwvrWfZznGOVDpk",
+            authDomain: "sonmez-fayans.firebaseapp.com",
+            projectId: "sonmez-fayans",
+            storageBucket: "sonmez-fayans.firebasestorage.app",
+            messagingSenderId: "22022413782",
+            appId: "1:22022413782:web:b8ca6a73703a1a9d7cd877"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.bultenAc = function(src) {
             var modal = document.getElementById("imageModal");
             var modalImg = document.getElementById("img01");
             modal.style.display = "block";
             modalImg.src = src;
         }
 
-        function modalKapat() {
+        window.modalKapat = function() {
             document.getElementById("imageModal").style.display = "none";
         }
 
-        window.onload = function() {
-            yorumlariGoster();
-        };
-
-        function yorumEkle() {
+        window.yorumEkle = async function() {
             let ad = document.getElementById("yorumAd").value.trim();
             let metin = document.getElementById("yorumMetin").value.trim();
 
@@ -288,41 +302,59 @@
                 return;
             }
 
-            let yeniYorum = { ad: ad, metin: metin };
-            let yorumlar = JSON.parse(localStorage.getItem("sonmezYorumlar")) || [];
-            yorumlar.unshift(yeniYorum);
+            try {
+                await addDoc(collection(db, "bekleyen_yorumlar"), {
+                    ad: ad,
+                    metin: metin,
+                    tarih: new Date()
+                });
 
-            localStorage.setItem("sonmezYorumlar", JSON.stringify(yorumlar));
-
-            document.getElementById("yorumAd").value = "";
-            document.getElementById("yorumMetin").value = "";
-            yorumlariGoster();
+                alert("Yorumunuz başarıyla alındı kanka! Usta onayından sonra sitede yayınlanacaktır.");
+                document.getElementById("yorumAd").value = "";
+                document.getElementById("yorumMetin").value = "";
+            } catch (e) {
+                alert("Yorum gönderilirken hata oluştu kanka: " + e.message);
+            }
         }
 
-        function yorumlariGoster() {
-            let yorumlar = JSON.parse(localStorage.getItem("sonmezYorumlar")) || [];
+        async function onayliYorumlariGetir() {
             let listeDiv = document.getElementById("yorumlarListesi");
-            
-            if (yorumlar.length === 0) {
-                listeDiv.innerHTML = `
-                    <div class="review-card" style="text-align: center; color: #64748b; font-style: normal;">
-                        Henüz yorum yapılmamış. İlk değerlendirmeyi siz yazın!
-                    </div>
-                `;
-                return;
-            }
+            try {
+                const q = query(collection(db, "yorumlar"));
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    listeDiv.innerHTML = `
+                        <div class="review-card" style="text-align: center; color: #64748b; font-style: normal;">
+                            Henüz onaylanmış yorum bulunmuyor.
+                        </div>
+                    `;
+                    return;
+                }
 
-            let html = "";
-            for (let i = 0; i < yorumlar.length; i++) {
-                html += `
-                    <div class="review-card">
-                        <div class="author">— ${yorumlar[i].ad}</div>
-                        <div class="comment">"${yorumlar[i].metin}"</div>
+                let html = "";
+                querySnapshot.forEach((doc) => {
+                    let y = doc.data();
+                    html += `
+                        <div class="review-card">
+                            <div class="author">— ${y.ad}</div>
+                            <div class="comment">"${y.metin}"</div>
+                        </div>
+                    `;
+                });
+                listeDiv.innerHTML = html;
+            } catch (e) {
+                listeDiv.innerHTML = `
+                    <div class="review-card" style="text-align: center; color: #ef4444; font-style: normal;">
+                        Yorumlar yüklenirken bağlantı hatası oluştu.
                     </div>
                 `;
             }
-            listeDiv.innerHTML = html;
         }
+
+        window.onload = function() {
+            onayliYorumlariGetir();
+        };
     </script>
 
 </body>
