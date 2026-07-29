@@ -273,7 +273,7 @@
             let metin = document.getElementById("yorumMetin").value.trim();
 
             if (ad === "" || metin === "") {
-                alert("Lütfen adınızı ve yorumunuzu yazın kanka!");
+                alert("Lütfen adınızı ve yorumunuzu yazın !");
                 return;
             }
 
@@ -284,11 +284,11 @@
                     tarih: new Date()
                 });
 
-                alert("Yorumunuz başarıyla alındı kanka! Usta onayından sonra sitede yayınlanacaktır.");
+                alert("Yorumunuz başarıyla alındı ! Usta onayından sonra sitede yayınlanacaktır.");
                 document.getElementById("yorumAd").value = "";
                 document.getElementById("yorumMetin").value = "";
             } catch (e) {
-                alert("Yorum gönderilirken hata oluştu kanka: " + e.message);
+                alert("Yorum gönderilirken hata oluştu : " + e.message);
             }
         }
 
