@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sönmez Fayansçılık - Tüm Referanslar ve Galeri</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f8fafc; color: #334155; line-height: 1.7; }
+        
+        header { background: #0f172a; color: #fff; padding: 30px 20px; text-align: center; border-bottom: 4px solid #f59e0b; }
+        header h1 { font-size: 28px; color: #f59e0b; margin-bottom: 10px; font-weight: 700; }
+        .back-btn { display: inline-block; background: #f59e0b; color: #0f172a; padding: 10px 20px; border-radius: 50px; font-weight: bold; text-decoration: none; transition: 0.3s; }
+        .back-btn:hover { background: #d97706; transform: translateY(-2px); }
+
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        
+        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+        .gallery-item { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.04); transition: all 0.3s ease; cursor: pointer; border: 1px solid #e2e8f0; }
+        .gallery-item:hover { transform: translateY(-5px); box-shadow: 0 12px 25px rgba(0,0,0,0.08); border-color: #f59e0b; }
+        .gallery-item img { width: 100%; height: 210px; object-fit: cover; display: block; background: #f1f5f9; }
+        .gallery-item .info { padding: 14px; text-align: center; font-weight: 600; color: #334155; font-size: 14px; background: #fff; }
+
+        /* Modal (Fotoğraf Büyütme) */
+        .modal { display: none; position: fixed; z-index: 1000; padding-top: 50px; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.9); text-align: center; backdrop-filter: blur(5px); }
+        .modal-content { max-width: 90%; max-height: 80vh; border-radius: 12px; box-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        .close { position: absolute; top: 25px; right: 40px; color: #fff; font-size: 45px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .close:hover { color: #f59e0b; }
+
+        footer { background: #0f172a; color: #94a3b8; text-align: center; padding: 30px; font-size: 14px; margin-top: 60px; border-top: 4px solid #f59e0b; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Usta İşçilik Tam Galeri</h1>
+        <a href="index.html" class="back-btn">← Ana Sayfaya Geri Dön</a>
+    </header>
+
+    <div class="container">
+        <div class="gallery">
+            <script>
+                for (let i = 1; i <= 54; i++) {
+                    document.write(`
+                        <div class="gallery-item" onclick="bultenAc('fayans (${i}).jpg')">
+                            <img src="fayans (${i}).jpg" alt="Sönmez Fayans Uygulama ${i}" loading="lazy">
+                            <div class="info">Sönmez Fayansçılık Referans ${i}</div>
+                        </div>
+                    `);
+                }
+            </script>
+        </div>
+    </div>
+
+    <!-- Fotoğraf Büyütme Penceresi (Modal) -->
+    <div id="imageModal" class="modal" onclick="modalKapat()">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="img01">
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Sönmez Fayansçılık | Tüm Hakları Saklıdır.</p>
+    </footer>
+
+    <script>
+        function bultenAc(src) {
+            var modal = document.getElementById("imageModal");
+            var modalImg = document.getElementById("img01");
+            modal.style.display = "block";
+            modalImg.src = src;
+        }
+
+        function modalKapat() {
+            document.getElementById("imageModal").style.display = "none";
+        }
+    </script>
+
+</body>
+</html>
